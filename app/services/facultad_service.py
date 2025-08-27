@@ -1,6 +1,6 @@
 from typing import Optional
 from app.models import Facultad
-from app.repositories.facultad_repositorio import FacultadRepository
+from app.repositories.facultad_repositorie import FacultadRepository
 
 
 class FacultadService:

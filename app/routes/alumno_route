@@ -1,0 +1,33 @@
+from flask import Blueprint, Response, jsonify
+from app.services.alumno_service import AlumnoService
+from app.exporters.alumno_pdf_exporter import AlumnoPDFExporter
+from app.exporters.alumno_json_exporter import AlumnoJSONExporter
+
+alumno_bp = Blueprint("alumno", __name__)
+
+# ------------------- JSON -------------------
+@alumno_bp.route("/alumno/<int:nro_legajo>/json", methods=["GET"])
+def ficha_alumno_json(nro_legajo):
+    alumno = AlumnoService.obtener_ficha_alumno(nro_legajo)
+    if not alumno:
+        return jsonify({"error": "Alumno no encontrado"}), 404
+
+    exporter = AlumnoJSONExporter()
+    return Response(exporter.exportar(alumno), mimetype="application/json")
+
+
+# ------------------- PDF -------------------
+@alumno_bp.route("/alumno/<int:nro_legajo>/pdf", methods=["GET"])
+def ficha_alumno_pdf(nro_legajo):
+    alumno = AlumnoService.obtener_ficha_alumno(nro_legajo)
+    if not alumno:
+        return jsonify({"error": "Alumno no encontrado"}), 404
+
+    exporter = AlumnoPDFExporter()
+    pdf_bytes = exporter.exportar(alumno)
+
+    return Response(
+        pdf_bytes,
+        mimetype="application/pdf",
+        headers={"Content-Disposition": f"inline; filename=ficha_alumno_{nro_legajo}.pdf"}
+    )
