@@ -41,9 +41,13 @@ class FacultadRepository:
         :return: Objeto Facultad actualizado.
         """
         facultad_existente = db.session.merge(facultad)
-        if not facultad_existente:
-            return None
+
+        """ Saco el if not return  None porque si no existe, por defecto directamente la inserta como nueva. osea NUNCA va a devolver None!.
+        """
+
+        db.session.commit()
         return facultad_existente
+    
     
     @staticmethod
     def borrar_por_id(id: int) -> Facultad:
@@ -58,3 +62,5 @@ class FacultadRepository:
         db.session.delete(facultad)
         db.session.commit()
         return facultad
+
+

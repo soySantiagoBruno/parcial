@@ -44,15 +44,20 @@ class FacultadService:
         facultad_existente = FacultadRepository.buscar_por_id(id)
         if not facultad_existente:
             return None
-        facultad_existente.nombre = facultad.nombre
-        facultad_existente.abreviatura = facultad.abreviatura
-        facultad_existente.directorio = facultad.directorio
-        facultad_existente.sigla = facultad.sigla
-        facultad_existente.codigo_postal = facultad.codigo_postal
-        facultad_existente.ciudad = facultad.ciudad
-        facultad_existente.domicilio = facultad.domicilio
-        facultad_existente.telefono = facultad.telefono
-        facultad_existente.contacto = facultad.contacto
+        
+
+        """
+        Estabamos poniendo manualmente cada atributo de la entidad Facultad.
+
+        En vez de eso, se puede usar un bucle dinámico con setattr, iterando sobre una lista de atributos
+
+        Busqué la función en https://www.w3schools.com/python/ref_func_setattr.asp porque la había olvidado!
+        """
+        for attr in ["nombre", "abreviatura", "directorio", "sigla", 
+                    "codigo_postal", "ciudad", "domicilio", "telefono", "contacto"]:
+            setattr(facultad_existente, attr, getattr(facultad, attr))
+        
+        
         return facultad_existente
         
     @staticmethod
